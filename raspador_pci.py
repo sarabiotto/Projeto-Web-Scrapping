@@ -12,7 +12,7 @@ res.raise_for_status()
 
 sopa = BeautifulSoup(res.text, 'html.parser')
 
-cidades_alvo = ['rio claro']
+cidades_alvo = ['rio claro', 'limeira', 'piracicaba', 'campinas']
 vagas = sopa.select('.da, .na, .ea')
 print("Iniciando a busca por vagas...\n")
 
