@@ -2,11 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 
 url = 'https://www.pciconcursos.com.br/concursos/sudeste/'
-
 cabecalhos = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
 }
-
 print("Acessando o site PCI Concursos...")
 
 res = requests.get(url, headers=cabecalhos)
@@ -14,27 +12,23 @@ res.raise_for_status()
 
 sopa = BeautifulSoup(res.text, 'html.parser')
 
-cidades_alvo = ['rio claro', 'piracicaba', 'limeira', 'araras']
-
+cidades_alvo = ['rio claro']
 vagas = sopa.select('.da, .na, .ea')
+print("Iniciando a busca por vagas...\n")
 
-print(f"O site entregou {len(vagas)} vagas de concursos.\n")
-
-encontrou_vaga = False
+qtd_vagas_encontradas = 0
 
 for vaga in vagas:
     texto_vaga = vaga.text.lower()
-    
-    # Continua buscando por qualquer cidade da lista sem exigir a cota PCD neste teste
     tem_cidade = any(cidade in texto_vaga for cidade in cidades_alvo)
-    
     if tem_cidade:
-        encontrou_vaga = True
+        qtd_vagas_encontradas += 1 
         texto_limpo = vaga.text.strip()
         print("-" * 50)
-        print("VAGA ENCONTRADA:")
+        print("VAGAS:")
         print(texto_limpo)
-
-if not encontrou_vaga:
-    print("-" * 50)
-    print("Nenhuma vaga encontrada para as cidades listadas neste momento.")
+print("-" * 50)
+if qtd_vagas_encontradas > 0:
+    print(f"Busca concluída! O site entregou {qtd_vagas_encontradas} vaga(s) de concurso para a sua busca.")
+else:
+    print("Nenhuma vaga encontrada no momento.")
